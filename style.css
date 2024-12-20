@@ -83,11 +83,34 @@ body {
 }
 
 .spotifyPlaylists {
-    padding: 16px;
-    
-}   
+  padding: 16px;
+}
 
-.spotifyPlaylists h1{
-    font-weight: bolder;
-    font-size: 22px;
+.spotifyPlaylists h1 {
+  font-weight: bolder;
+  font-size: 22px;
+}
+
+.cardContainer{
+  margin: 30px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+
+.card {
+  width: 200px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #252525;
+}
+
+.card > * {
+  padding-top: 10px;
+}
+
+.card img {
+  width: 100%;
+  object-fit: contain;
 }
