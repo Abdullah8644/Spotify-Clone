@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Spotify - Web Player: Music for everyone</title>
-    <link rel="icon" href="favicon.ico" type="image/svg+xml" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"> 
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="utility.css" />
   </head>
@@ -38,18 +38,7 @@
             <h2>Your Library</h2>
           </div>
           <div class="songList">
-            <ul>
-              <li>
-                <img class="invert" src="svgs/music.svg" alt="music" />
-                <div class="info">
-                  <div>Song Name</div>
-                </div>
-                <div class="playnow">
-                  <span>Play Now</span>
-                  <img class="invert" src="svgs/play.svg" alt="play" />
-                </div>
-              </li>
-            </ul>
+            <ul></ul>
           </div>
 
           <div class="footer">
@@ -126,7 +115,7 @@
           <h1>Spotify Playlist</h1>
           <div class="cardContainer">
             <div class="card">
-              <div class="play playHover">
+              <div class="play">
                 <svg
                   width="16"
                   height="16"
@@ -171,15 +160,21 @@
           </div>
 
           <div class="playbar">
-            <div class="songinfo"></div>
-
-            <div class="songbuttons">
-              <img src="svgs/prevsong.svg" alt="" />
-              <img src="svgs/play.svg" alt="" />
-              <img src="svgs/nextsong.svg" alt="" />
+            <div class="seekbar">
+              <div class="circle"></div>
             </div>
 
-            <div class="songtime"></div>
+            <div class="abovebar">
+              <div class="songinfo"></div>
+
+              <div class="songbuttons">
+                <img id="previous" src="svgs/prevsong.svg" alt="" />
+                <img id="play" src="svgs/play.svg" alt="" />
+                <img id="next" src="svgs/nextsong.svg" alt="" />
+              </div>
+
+              <div class="songtime"></div>
+            </div>
           </div>
         </div>
       </div>

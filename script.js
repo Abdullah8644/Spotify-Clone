@@ -1,4 +1,19 @@
 console.log("JavaScript is working!");
+var currentSong = new Audio();
+
+function secondsToMinsSec(seconds) {
+  if (isNaN(seconds) || seconds < 0) {
+    return "00:00";
+  }
+
+  const mintues = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+
+  const forrmattedMinutes = String(mintues).padStart(2, "0");
+  const formattedSeconds = String(remainingSeconds).padStart(2, "0");
+
+  return `${forrmattedMinutes}:${formattedSeconds}`;
+}
 
 async function getsongs() {
   let a = await fetch("http://127.0.0.1:3000/songs/");
@@ -20,44 +35,81 @@ async function getsongs() {
   return songs;
 }
 
+const playMusic = async (track) => {
+  songs = await getsongs();
+  console.log(songs);
+  index = 0;
+  for (song of songs) {
+    index++;
+    song = song.replaceAll("%20", "");
+    if (song.includes(track)) {
+      break;
+    }
+  }
+
+  play.src = "svgs/pause.svg";
+  currentSong.src = "/songs/" + songs[index - 1];
+  currentSong.play();
+
+  document.querySelector(".songinfo").innerHTML = track;
+  document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
+};
+
 async function main() {
   let songs = await getsongs();
-
-  console.log(songs);
 
   let songUL = document
     .querySelector(".songList")
     .getElementsByTagName("ul")[0];
-  index = 0;
   for (const song of songs) {
-    console.log(song);
-    index++;
-    console.log(index);
     songUL.innerHTML =
       songUL.innerHTML +
       `<li>
                 <img class="invert" src="svgs/music.svg" alt="music" />
                 <div class="info">
-                  <div>${song.replaceAll("%20","").replace(".mp3","").split("-")[0]}</div>
+                  <div>${
+                    song.replaceAll("%20", "").replace(".mp3", "").split("-")[0]
+                  }</div>
                 </div>
                 <div class="playnow">
                   <span>Play Now</span>
                   <img class="invert" src="svgs/play.svg" alt="play" />
                 </div>
               </li>`;
-
   }
 
-  var audio = new Audio(songs[0]);
-  console.log(audio);
-  let none = document.querySelector(".none");
-
-  // audio.play();
-
-  audio.addEventListener("loadeddata", () => {
-    let duration = audio.duration;
-    console.log(audio.duration, audio.currentSrc, audio.currentTime);
+  // Attach an event listenr to each song
+  Array.from(
+    document.querySelector(".songList").getElementsByTagName("li")
+  ).forEach((e) => {
+    e.addEventListener("click", (element) => {
+      music = e.querySelector(".info").firstElementChild.innerHTML.trim();
+      playMusic(music);
+    });
   });
+
+  // *  Attach an event listener to the next and previous
+  play.addEventListener("click", () => {
+    if (currentSong.paused) {
+      currentSong.play();
+      play.src = "svgs/pause.svg";
+      console.log("Playing");
+    } else {
+      currentSong.pause();
+      play.src = "svgs/play.svg";
+      console.log("Pausing");
+    }
+  });
+
+  //* Listen for timeupdate event
+  currentSong.addEventListener("timeupdate", () => {
+    document.querySelector(".songtime").innerHTML = `${secondsToMinsSec(
+      currentSong.currentTime
+    )} / ${secondsToMinsSec(currentSong.duration)}`;
+  });
+
+
+  
 }
 
 main();
