@@ -20,7 +20,8 @@ body {
 }
 
 .right {
-  width: 75vw;
+  width: 70vw;
+  height: 100vh;
 }
 
 .home ul li {
@@ -37,7 +38,7 @@ body {
   gap: 15px;
   width: 100%;
   padding-top: 14px;
-  padding: 23px 14px;
+  padding: 0px 14px;
   font-weight: bold;
   align-items: center;
   font-size: 13px;
@@ -178,16 +179,67 @@ body {
 
 
 .playbar{
-  position: absolute;
-  bottom: 0px;
-  background-color: green;
-  width: 100%;
+  position: fixed ;
+  bottom: 20px;
+  background-color: rgb(229, 238, 229);
+  width: 70%;
   padding:12px;
+  box-sizing: border-box;
+
 }
 
 .songbuttons{
   display: flex;
   justify-content: center;
+  gap: 20px;
+}
   
+.songList{
+  height: 350px ;
+  overflow-y: auto;
+  margin-bottom: 44px;
+}
+
+
+
+
+.info{
+  /* font-size: 13px; */
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  max-width: 150px;
+}
+
+
+.songList ul{
+  padding: 0 12px;
+  box-sizing: border-box;
+}
+
+.songList ul li{
+  list-style-type:  decimal;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+  border: 1px solid white;
+  margin: 12px 0px;
+  padding: 9px ;
+  box-sizing: border-box;
+  border-radius: 5px;
+} 
+
+
+.playnow{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.playnow span{
+  font-size: 15px;
+  width: 100%;
+  padding: 12px;
   
 }
