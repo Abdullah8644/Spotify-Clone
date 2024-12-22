@@ -316,7 +316,7 @@ body {
     left: -120%;
     transition: all 1s;
     z-index: 1;
-    width: 370px;
+    width: 95vw;
     background-color: black;
   }
 
