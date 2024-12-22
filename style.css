@@ -54,20 +54,24 @@ body {
   font-weight: bold;
   align-self: flex-end;
   justify-self: flex-start;
+  width: 100%;
 }
 
 .footer {
   display: flex;
   font-size: 10px;
   color: gray;
-  gap: 13px;
-  position: absolute;
-  bottom: 0;
+  gap: 12px;
   padding: 10px 0px;
+  justify-content: space-around;
+  
+  
+
 }
 
 .footer a {
   color: gray;
+  width: 10px;
 }
 
 .right {
@@ -199,7 +203,7 @@ body {
 }
   
 .songList{
-  height: 350px ;
+  height: 400px ;
   overflow-y: auto;
   margin-bottom: 44px;
 }
@@ -215,13 +219,22 @@ body {
   max-width: 150px;
 }
 
+.songList{
+  width: 100%;
+
+}
 
 .songList ul{
+
   padding: 0 12px;
   box-sizing: border-box;
+  width: 100%;
+
 }
 
 .songList ul li{
+  width: 100%;
+
   list-style-type:  decimal;
   display: flex;
   justify-content: space-between;
@@ -285,3 +298,6 @@ body {
   justify-content: space-between;
 }
 
+@media (max-width) {
+  
+}
