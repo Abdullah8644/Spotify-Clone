@@ -71,7 +71,7 @@ async function main() {
                 <img class="invert" src="svgs/music.svg" alt="music" />
                 <div class="info">
                   <div>${
-                    song.replaceAll("%20", "").replace(".mp3", "").split("-")[0]
+                    song.replaceAll("%20", "").replace(".mp3", "").split("-")[0].split(',')[0]
                   }</div>
                 </div>
                 <div class="playnow">
