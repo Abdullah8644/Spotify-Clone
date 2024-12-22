@@ -16,7 +16,7 @@ function secondsToMinsSec(seconds) {
 }
 
 async function getsongs() {
-  let a = await fetch("http://127.0.0.1:3000/songs/");
+  let a = await fetch("/songs.html");
   let response = await a.text();
   // console.log(response);
   let div = document.createElement("div");
@@ -109,7 +109,7 @@ async function main() {
   });
 
 
-  
+
 }
 
 main();
