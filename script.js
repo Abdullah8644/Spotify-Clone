@@ -35,31 +35,48 @@ async function getsongs() {
   return songs;
 }
 
-const playMusic = async (track, pause = false) => {
-  songs = await getsongs();
-  console.log(songs);
-  index = 0;
-  for (song of songs) {
-    index++;
-    song = song.replaceAll("%20", "");
-    if (song.includes(track)) {
-      break;
+const playMusic = async (track, pause = false, auto = false) => {
+  if (!auto) {
+    songs = await getsongs();
+    console.log(songs);
+    index = 0;
+    for (song of songs) {
+      index++;
+      song = song.replaceAll("%20", "");
+      if (song.includes(track)) {
+        break;
+      }
     }
-  }
 
-  currentSong.src = "/songs/" + songs[index - 1];
-  if (!pause) {
-    play.src = "svgs/pause.svg";
-    await currentSong.play();
-  }
+    currentSong.src = "/songs/" + songs[index - 1];
+    if (!pause) {
+      play.src = "svgs/pause.svg";
+      await currentSong.play();
+    }
 
-  document.querySelector(".songinfo").innerHTML = track;
-  document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
+    document.querySelector(".songinfo").innerHTML = track
+      .replaceAll("%20", "")
+      .replace(".mp3", "")
+      .split("-")[0]
+      .split(",")[0];
+    document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
+  } else {
+    songs = await getsongs();
+    console.log(songs);
+    currentSong.src = "/songs/" + songs[2];
+
+    document.querySelector(".songinfo").innerHTML = track
+      .replaceAll("%20", "")
+      .replace(".mp3", "")
+      .split("-")[0]
+      .split(",")[0];
+    document.querySelector(".songtime").innerHTML = "00:00 / 00:00";
+  }
 };
 
 async function main() {
   let songs = await getsongs();
-  playMusic(songs[0], true);
+  playMusic(songs[2], true, (auto = true));
 
   let songUL = document
     .querySelector(".songList")
@@ -71,7 +88,11 @@ async function main() {
                 <img class="invert" src="svgs/music.svg" alt="music" />
                 <div class="info">
                   <div>${
-                    song.replaceAll("%20", "").replace(".mp3", "").split("-")[0].split(',')[0]
+                    song
+                      .replaceAll("%20", "")
+                      .replace(".mp3", "")
+                      .split("-")[0]
+                      .split(",")[0]
                   }</div>
                 </div>
                 <div class="playnow">
@@ -110,18 +131,17 @@ async function main() {
     document.querySelector(".songtime").innerHTML = `${secondsToMinsSec(
       currentSong.currentTime
     )} / ${secondsToMinsSec(currentSong.duration)}`;
-    document.querySelector(".circle").style.left=(currentSong.currentTime/currentSong.duration)*100+"%";
+    document.querySelector(".circle").style.left =
+      (currentSong.currentTime / currentSong.duration) * 100 + "%";
   });
 
   // Add an event listenr to seek bar
-  document.querySelector(".seekbar").addEventListener("click",(e)=>{
-    let percent=(e.offsetX/e.target.getBoundingClientRect().width)*100;
-    document.querySelector(".circle").style.left=percent+"%";
-    console.log((((currentSong.duration)*percent)/100))
-    currentSong.currentTime=(((currentSong.duration)*percent)/100)
-  })
-
-
+  document.querySelector(".seekbar").addEventListener("click", (e) => {
+    let percent = (e.offsetX / e.target.getBoundingClientRect().width) * 100;
+    document.querySelector(".circle").style.left = percent + "%";
+    console.log((currentSong.duration * percent) / 100);
+    currentSong.currentTime = (currentSong.duration * percent) / 100;
+  });
 }
 
 main();
