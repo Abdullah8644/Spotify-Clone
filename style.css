@@ -256,6 +256,7 @@ body {
   position: absolute;
   bottom: 0;
   margin: 6px;
+  cursor: pointer;
 }
 
 .circle{
@@ -266,7 +267,7 @@ body {
   position: relative;
   bottom: 6px;
   left: 0%;
-  transition:left 0.5s  ease-in-out;
+  transition:left 0.5s  linear;
 }
 
 .songbuttons img{
