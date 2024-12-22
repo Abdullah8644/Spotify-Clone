@@ -1,7 +1,8 @@
 console.log("JavaScript is working!");
 var currentSong = new Audio();
 let songs = [];
-document.querySelector(".playbar").classList.toggle("playbar-r")
+document.querySelector(".playbar").classList.toggle("playbar-r");
+let value = document.querySelector(".range").getElementsByTagName("input")[0];
 
 // Convert seconds to MM:SS format
 function secondsToMinsSec(seconds) {
@@ -37,7 +38,7 @@ async function getsongs() {
 
 function url_reseter(backwards = false) {
   if (backwards) {
-    currentSong.src = "/songs/" + songs[songs.length-1]; // Set the current song source
+    currentSong.src = "/songs/" + songs[songs.length - 1]; // Set the current song source
   }
   currentSong.src = "/songs/" + songs[0]; // Set the current song source
 }
@@ -58,7 +59,6 @@ const playMusic = async (track, pause = false) => {
     return;
   }
 
-  console.log(`Playing track index: ${index}, Name: ${songs[index]}`);
 
   currentSong.src = "/songs/" + songs[index]; // Set the current song source
 
@@ -106,7 +106,6 @@ async function main() {
   Array.from(songUL.getElementsByTagName("li")).forEach((li, idx) => {
     li.addEventListener("click", () => {
       playMusic(songs[idx]);
-      console.log(songs[idx]);
     });
   });
 
@@ -118,6 +117,21 @@ async function main() {
     } else {
       currentSong.pause();
       play.src = "svgs/play.svg";
+    }
+  });
+
+  // play/pause with space
+
+  document.addEventListener("keypress", (e) => {
+    if (e.key == " ") {
+      e.preventDefault(); // Prevent the default scrolling behavior
+      if (currentSong.paused) {
+        currentSong.play();
+        play.src = "svgs/pause.svg";
+      } else {
+        currentSong.pause();
+        play.src = "svgs/play.svg";
+      }
     }
   });
 
@@ -140,16 +154,13 @@ async function main() {
   // Hamburger menu
   document.querySelector(".hamburger").addEventListener("click", () => {
     document.querySelector(".left").style.left = 0;
-    console.log(document.querySelector(".playbar"))
-    document.querySelector(".playbar").classList.toggle("playbar-r")
-    
+    document.querySelector(".playbar").classList.toggle("playbar-r");
   });
 
   // Close menu
   document.querySelector(".close").addEventListener("click", () => {
-    document.querySelector(".playbar").classList.toggle("playbar-r")
+    document.querySelector(".playbar").classList.toggle("playbar-r");
     document.querySelector(".left").style.left = "-120%";
-
   });
 
   // Previous button
@@ -158,7 +169,7 @@ async function main() {
     if (index - 1 >= 0) {
       playMusic(songs[index - 1]);
     } else {
-      url_reseter(backwards=true);
+      url_reseter((backwards = true));
       index = songs.indexOf(currentSong.src.split("/").pop());
       playMusic(songs[index]);
     }
@@ -173,6 +184,74 @@ async function main() {
       url_reseter();
       index = songs.indexOf(currentSong.src.split("/").pop());
       playMusic(songs[index]);
+    }
+  });
+
+  // Add an event to volume
+
+  document
+    .querySelector(".range")
+    .getElementsByTagName("input")[0]
+    .addEventListener("change", (e) => {
+      let vol = parseInt(e.target.value) / 100;
+      currentSong.volume = vol;
+    });
+
+  document.addEventListener("keydown", function (event) {
+    // Check if an arrow key is pressed
+    if (
+      ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)
+    ) {
+      event.preventDefault(); // Prevent the default scrolling behavior
+    }
+
+    let vol = currentSong.volume;
+    let rangeInput = document
+      .querySelector(".range")
+      .getElementsByTagName("input")[0];
+
+    switch (event.key) {
+      case "ArrowUp":
+        if (vol <= 0.97) {
+          // Prevent volume from going above 1
+          currentSong.volume += 0.03;
+          rangeInput.value = Math.round(currentSong.volume * 100); // Update the range input
+        } else {
+          currentSong.volume = 1;
+          rangeInput.value = 100;
+        }
+        break;
+
+      case "ArrowDown":
+        if (vol >= 0.03) {
+          // Prevent volume from going below 0
+          currentSong.volume -= 0.03;
+          rangeInput.value = Math.round(currentSong.volume * 100); // Update the range input
+        } else {
+          currentSong.volume = 0;
+          rangeInput.value = 0;
+        }
+        break;
+
+      case "ArrowLeft":
+        currentSong.currentTime -= 5;
+        currentSong.pause();
+        currentSong.currentTime -= 5; // Move backward 5 seconds
+        setTimeout(() => {
+          currentSong.play(); // Resume playback after 100ms (ensure time change is applied)
+        }, 1000);
+        break;
+
+      case "ArrowRight":
+        currentSong.currentTime += 5;
+        currentSong.pause();
+        currentSong.currentTime += 5; // Move backward 5 seconds
+        setTimeout(() => {
+          currentSong.play(); // Resume playback after 100ms (ensure time change is applied)
+        }, 1000);
+        break;
+
+      default:
     }
   });
 }

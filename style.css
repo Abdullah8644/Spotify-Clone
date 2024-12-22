@@ -359,7 +359,7 @@ body {
   }
 
   .card {
-    width: 80vw;
+    width: 40vw;
   }
 
   .playbar-r {
@@ -374,12 +374,14 @@ body {
     flex-direction: column;
     gap: 15px;
   }
+ 
 
   .abovebar {
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 15px;
+    
   }
 
   .songinfo {
@@ -393,6 +395,13 @@ body {
   }
   #next {
     width: 20px;
+  }
+}
+
+@media (max-width:600px) {
+  .card{
+    width: 80vw;
+
   }
 }
 
