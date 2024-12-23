@@ -4,8 +4,10 @@ let songs = [];
 document.querySelector(".playbar").classList.toggle("playbar-r");
 let value = document.querySelector(".range").getElementsByTagName("input")[0];
 let currFolder;
+let range = document.querySelector(".range").getElementsByTagName("input")[0];
+let old_volume = [];
+let old_value = [];
 
-// Convert seconds to MM:SS format
 function secondsToMinsSec(seconds) {
   if (isNaN(seconds) || seconds < 0) {
     return "00:00";
@@ -72,8 +74,9 @@ async function getsongs(folder) {
 function url_reseter(backwards = false) {
   if (backwards) {
     currentSong.src = `/${currFolder}/` + songs[songs.length - 1]; // Set the current song source
+  } else {
+    currentSong.src = `/${currFolder}/` + songs[0]; // Set the current song source
   }
-  currentSong.src = `/${currFolder}/` + songs[0]; // Set the current song source
 }
 
 const playMusic = async (track, pause = false) => {
@@ -114,12 +117,50 @@ async function displayAlbums() {
   const div = document.createElement("div");
   div.innerHTML = response;
   let anchors = div.getElementsByTagName("a");
-  Array.from(anchors).forEach((e) => {
-    if (e.href.includes("/songs")) {
-      console.log(e.href.split("/").slice(-2)[0]);
-    }
-  });
+  let cardContainer = document.querySelector(".cardContainer");
+  let array = Array.from(anchors);
 
+  for (let index = 0; index < array.length; index++) {
+    const e = array[index];
+
+    if (e.href.includes("/songs")) {
+      let folder = e.href.split("/").slice(-2)[0];
+      // * Get the meta data of the folder
+      const a = await fetch(`http://127.0.0.1:3000/songs/${folder}/info.json`);
+      let response = await a.json();
+
+      cardContainer.innerHTML =
+        cardContainer.innerHTML +
+        `<div data-folder="${folder}" class="card">
+              <div class="play playHover">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5 20V4L19 12L5 20Z"
+                    stroke="#141B34"
+                    fill="#000"
+                    stroke-width="1.5"
+                    stroke-linejoin="round"
+                  ></path>
+                </svg>
+              </div>
+              <img src="/songs/${folder}/cover.jpg" alt="Happy Hits Cover" />
+              <h2>${response.title}</h2>
+              <p>${response.description}</p>
+            </div>`;
+    }
+  }
+
+  Array.from(document.getElementsByClassName("card")).forEach((e) => {
+    e.addEventListener("click", async (item) => {
+      songs = await getsongs(`songs/${item.currentTarget.dataset.folder}`);
+      playMusic(songs[0])
+    });
+  });
 }
 
 // Main function
@@ -278,13 +319,25 @@ async function main() {
 
       default:
     }
+  });
 
-    // *Load the playlist whenever card is clicked
-    Array.from(document.getElementsByClassName("card")).forEach((e) => {
-      e.addEventListener("click", async (item) => {
-        songs = await getsongs(`songs/${item.currentTarget.dataset.folder}`);
-      });
-    });
+  // Add event listner to mute the track
+  document.querySelector(".volume > img").addEventListener("click", (e) => {
+    if (e.target.src.includes("svgs/sound.svg")) {
+      e.target.src = "svgs/mute.svg";
+      old_value.push(range.value);
+      old_volume.push(currentSong.volume);
+      console.log(old_value);
+
+      range.value = 0;
+      currentSong.volume = 0;
+    } else {
+      currentSong.volume = old_volume[0];
+      range.value = old_value[0];
+      e.target.src = "svgs/sound.svg";
+      old_value = [];
+      old_volume = [];
+    }
   });
 }
 

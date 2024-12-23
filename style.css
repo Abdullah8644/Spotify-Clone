@@ -329,7 +329,13 @@ body {
   justify-content: center;
   align-items: center;
   gap: 20px;
+  cursor: pointer;
 }
+
+.range input{
+  cursor: pointer;
+}
+
 
 @media (max-width: 1200px) {
   .left {
