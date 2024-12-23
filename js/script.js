@@ -81,10 +81,11 @@ function url_reseter(backwards = false) {
 
 const playMusic = async (track, pause = false) => {
   if (!songs || songs.length === 0) {
-    songs = await getsongs("songs/favs"); // Fetch the songs if not already fetched
+    songs = await getsongs("public/songs/favs"); // Fetch the songs if not already fetched
   }
 
   // Normalize the track to match the songs array
+  console.log(track)
   const normalizedTrack = track.replaceAll("%20", "").toLowerCase();
   const index = songs.findIndex((song) =>
     song.replaceAll("%20", "").toLowerCase().includes(normalizedTrack)
@@ -112,7 +113,7 @@ const playMusic = async (track, pause = false) => {
 };
 
 async function displayAlbums() {
-  const a = await fetch(`/songs`);
+  const a = await fetch(`public/songs`);
   const response = await a.text();
   const div = document.createElement("div");
   div.innerHTML = response;
@@ -123,10 +124,10 @@ async function displayAlbums() {
   for (let index = 0; index < array.length; index++) {
     const e = array[index];
 
-    if (e.href.includes("/songs")) {
+    if (e.href.includes("public/songs")) {
       let folder = e.href.split("/").slice(-2)[0];
       // * Get the meta data of the folder
-      const a = await fetch(`/songs/${folder}/info.json`);
+      const a = await fetch(`public/songs/${folder}/info.json`);
       let response = await a.json();
 
       cardContainer.innerHTML =
@@ -148,7 +149,7 @@ async function displayAlbums() {
                   ></path>
                 </svg>
               </div>
-              <img src="/songs/${folder}/cover.jpg" alt="Happy Hits Cover" />
+              <img src="public/songs/${folder}/cover.jpg" alt="Happy Hits Cover" />
               <h2>${response.title}</h2>
               <p>${response.description}</p>
             </div>`;
@@ -157,7 +158,7 @@ async function displayAlbums() {
 
   Array.from(document.getElementsByClassName("card")).forEach((e) => {
     e.addEventListener("click", async (item) => {
-      songs = await getsongs(`songs/${item.currentTarget.dataset.folder}`);
+      songs = await getsongs(`public/songs/${item.currentTarget.dataset.folder}`);
       playMusic(songs[0])
     });
   });
@@ -165,7 +166,7 @@ async function displayAlbums() {
 
 // Main function
 async function main() {
-  songs = await getsongs("songs/favs");
+  songs = await getsongs("public/songs/favs");
   if (songs[2]) {
     playMusic(songs[2], true);
   } else {
